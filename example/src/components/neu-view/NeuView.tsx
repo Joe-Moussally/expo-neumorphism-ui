@@ -1,8 +1,8 @@
 // ** React Imports
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 
 // ** React Native Imports
-import { View, type ViewStyle, type ViewProps, StyleSheet } from "react-native";
+import { View, type ViewStyle, type ViewProps, StyleSheet, TouchableWithoutFeedback, type GestureResponderEvent } from "react-native";
 
 export interface NeuViewProps extends ViewProps {
     /**
@@ -38,6 +38,12 @@ export interface NeuViewProps extends ViewProps {
      * @default 15
      */
     shadowBlur: number;
+    /**
+     * Void function that will be executed on View press
+     *
+     * @default () => void
+     */
+    onPress: void;
     /**
      * Heigh of the view in px
      *
@@ -124,6 +130,7 @@ export interface NeuViewProps extends ViewProps {
       borderRadius = 30,
       lightSource = "topLeft",
       style = {},
+      onPress = (e: GestureResponderEvent) => {},
       pressable = false,
       shadowDistance = 15,
       shadowBlur = 15,
@@ -135,6 +142,10 @@ export interface NeuViewProps extends ViewProps {
     ref,
   ) => {
 
+    // ** States
+    const [currentType, setCurrentType] = useState<NeuViewProps["type"]>(type)
+
+    // ** Styles
     const neuViewStyles = StyleSheet.create({
       container: {
         width,
@@ -142,7 +153,7 @@ export interface NeuViewProps extends ViewProps {
         backgroundColor,
         borderRadius,
       },
-      darkShadowConatiner: type === "flat" ? ({
+      darkShadowConatiner: currentType === "flat" ? ({
         borderWidth: 0.5,
         borderColor: 'white',
         shadowColor: '#c8c8c8',
@@ -155,7 +166,7 @@ export interface NeuViewProps extends ViewProps {
         borderWidth: 0.2,
         borderColor: 'white'
       },
-      lightShadowContainer: type === "flat" ? {
+      lightShadowContainer: currentType === "flat" ? {
         position: 'relative',
         shadowColor: 'white',
         backgroundColor,
@@ -186,13 +197,29 @@ export interface NeuViewProps extends ViewProps {
       }
     })
 
+    // ** Handlers
+    const handleOnpress = (e: GestureResponderEvent) => {
+      onPress(e)
+    }
+    const handlePressIn = () => {
+      if (type === "flat") {
+        setCurrentType("pressed")
+      }
+    }
+    const handlePressOut = () => {
+      if (type === "flat") {
+        setCurrentType("flat")
+      } 
+    }
+
     return (
+      <TouchableWithoutFeedback onPress={handleOnpress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
         <View ref={ref} style={[neuViewStyles.container, neuViewStyles.darkShadowConatiner, style]} {...props}>
           <View style={[neuViewStyles.container, neuViewStyles.lightShadowContainer]}>
 
             {/* Inner Shadows */}
             {
-              (type === "pressed") && (
+              (currentType === "pressed") ? (
                 <>
                   {/* Top */}
                   <View style={[neuViewStyles.topLeftInsetShadow, {top: -height, left: -width / 20, shadowOffset: {width: shadowDistance, height: shadowDistance}}]}/>
@@ -204,20 +231,21 @@ export interface NeuViewProps extends ViewProps {
                   <View style={[neuViewStyles.topLeftInsetShadow, {top: -height, left: -width, shadowOffset: {width: shadowDistance + width / 30, height: shadowDistance + height / 30}}]}/>
 
                   {/* Right */}
-                  <View style={[neuViewStyles.topLeftInsetShadow, {top: 0, right: -width, shadowOffset: {width: -shadowDistance, height: 0}, shadowOpacity: 0.2}]}/>
+                  <View style={[neuViewStyles.topLeftInsetShadow, {top: 0, right: -width, shadowOffset: {width: -shadowDistance / 2, height: 0}, shadowOpacity: 0.2}]}/>
 
                   {/* Bottom */}
-                  <View style={[neuViewStyles.topLeftInsetShadow, {top: height, right: 0, shadowOffset: {width: 0, height: -shadowDistance}, shadowOpacity: 0.2}]}/>
+                  <View style={[neuViewStyles.topLeftInsetShadow, {top: height, right: 0, shadowOffset: {width: 0, height: -shadowDistance / 2}, shadowOpacity: 0.2}]}/>
 
                   {/* Bottom Left */}
                   <View style={[neuViewStyles.topLeftInsetShadow, {top: height, left: width, shadowOffset: {width: -width / 30, height: -height / 30}, shadowOpacity: 0.2}]}/>
                 </>
-              )
+              ) : null
             }
 
             {children}
           </View>
         </View>
+      </TouchableWithoutFeedback>
     )
   })
 
