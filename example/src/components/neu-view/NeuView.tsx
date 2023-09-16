@@ -20,6 +20,18 @@ export interface NeuViewProps extends ViewProps {
      */
     type?: "flat" | "pressed";
     /**
+     * Distance of the shadow from the view in px
+     *
+     * @default 15
+     */
+    shadowDistance: number;
+    /**
+     * Blur of the View shadow  in px
+     *
+     * @default 15
+     */
+    shadowBlur: number;
+    /**
      * Heigh of the view in px
      *
      * @default 50
@@ -105,6 +117,8 @@ export interface NeuViewProps extends ViewProps {
       borderRadius = 30,
       lightSource = "topLeft",
       style = {},
+      shadowDistance = 15,
+      shadowBlur = 15,
       padding = 30,
       children = null,
       type = "flat",
@@ -121,30 +135,57 @@ export interface NeuViewProps extends ViewProps {
         borderRadius,
       },
       darkShadowConatiner: {
-        borderWidth: 0.5,
-        borderColor: 'white',
-        shadowColor: '#c8c8c8',
-        shadowOffset: {...calculateDarkShadowOffset(lightSource)},
-        shadowOpacity: 0.65,
-        shadowRadius: 12.5,
-        elevation: 5,
-        zIndex: 1
+        // borderWidth: 0.5,
+        // borderColor: 'white',
+        // shadowColor: '#c8c8c8',
+        // shadowOffset: {...calculateDarkShadowOffset(lightSource)},
+        // shadowOpacity: 0.65,
+        // shadowRadius: 12.5,
+        // elevation: 5,
+        // zIndex: 1
+
+        // padding: borderRadius,
+        // display: 'flex',
+        // alignItems: 'center',
+        // justifyContent: 'center'
       },
       lightShadowContainer: {
-        shadowColor: 'white',
-        backgroundColor,
-        shadowOffset: {...calculateLightShadowOffset(lightSource)},
-        shadowOpacity: 0.75,
-        shadowRadius: 10,
+        position: 'relative',
+        overflow: 'hidden',
+        // shadowColor: 'white',
+        // backgroundColor,
+        // shadowOffset: {...calculateLightShadowOffset(lightSource)},
+        // shadowOpacity: 0.75,
+        // shadowRadius: 10,
+        // elevation: 5,
+        // padding,
+        // zIndex: -1
+      },
+      topLeftInsetShadow: {
+        position: 'absolute',
+        backgroundColor: 'red',
+        width,
+        height,
+        
+        shadowColor: '#c8c8c8',
+        shadowOpacity: 0.45,
+        shadowRadius: shadowBlur,
         elevation: 5,
-        padding,
-        zIndex: -1
+        zIndex: 1,
+        borderRadius,
+        shadowOffset: {width: 10, height: 10},
       }
     })
 
     return (
         <View ref={ref} style={[neuViewStyles.container, neuViewStyles.darkShadowConatiner, style]} {...props}>
           <View style={[neuViewStyles.container, neuViewStyles.lightShadowContainer]}>
+
+            {/* Inner Shadows */}
+            <View style={[neuViewStyles.topLeftInsetShadow, {top: -height, left: -width / 20, shadowOffset: {width: shadowDistance, height: shadowDistance}}]}/>
+            <View style={[neuViewStyles.topLeftInsetShadow, {top: -height / 20, left: -width, shadowOffset: {width: shadowDistance, height: shadowDistance}}]}/>
+            <View style={[neuViewStyles.topLeftInsetShadow, {top: -height, left: -width, shadowOffset: {width: shadowDistance + width / 30, height: shadowDistance + height / 30}}]}/>
+
             {children}
           </View>
         </View>
