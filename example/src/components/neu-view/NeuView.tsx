@@ -43,7 +43,7 @@ export interface NeuViewProps extends ViewProps {
      *
      * @default () => void
      */
-    onPress: void;
+    onPress: () => void;
     /**
      * Heigh of the view in px
      *
@@ -132,8 +132,8 @@ export interface NeuViewProps extends ViewProps {
       style = {},
       onPress = (e: GestureResponderEvent) => {},
       pressable = false,
-      shadowDistance = 15,
-      shadowBlur = 15,
+      shadowDistance = 10,
+      shadowBlur = 10,
       padding = 30,
       children = null,
       type = "flat",
@@ -153,7 +153,7 @@ export interface NeuViewProps extends ViewProps {
         backgroundColor,
         borderRadius,
       },
-      darkShadowConatiner: currentType === "flat" ? ({
+      darkShadowConatiner: (currentType === "flat" && type !== "pressed") ? ({
         borderWidth: 0.5,
         borderColor: 'white',
         shadowColor: '#c8c8c8',
@@ -166,7 +166,7 @@ export interface NeuViewProps extends ViewProps {
         borderWidth: 0.2,
         borderColor: 'white'
       },
-      lightShadowContainer: currentType === "flat" ? {
+      lightShadowContainer: (currentType === "flat" && type !== "pressed") ? {
         position: 'relative',
         shadowColor: 'white',
         backgroundColor,
@@ -202,11 +202,13 @@ export interface NeuViewProps extends ViewProps {
       onPress(e)
     }
     const handlePressIn = () => {
+      if (!pressable) return
       if (type === "flat") {
         setCurrentType("pressed")
       }
     }
     const handlePressOut = () => {
+      if (!pressable) return
       if (type === "flat") {
         setCurrentType("flat")
       } 
@@ -219,7 +221,7 @@ export interface NeuViewProps extends ViewProps {
 
             {/* Inner Shadows */}
             {
-              (currentType === "pressed") ? (
+              (currentType === "pressed" || type === "pressed") ? (
                 <>
                   {/* Top */}
                   <View style={[neuViewStyles.topLeftInsetShadow, {top: -height, left: -width / 20, shadowOffset: {width: shadowDistance, height: shadowDistance}}]}/>
