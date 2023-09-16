@@ -14,7 +14,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       {/* <Text>Result: {result}</Text> */}
-      <NeuView />
+      <NeuView type='pressed'/>
     </View>
   );
 }
