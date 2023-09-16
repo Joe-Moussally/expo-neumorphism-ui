@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
 import { multiply } from 'expo-neumorphism-ui';
+import NeuView from './components/neu-view/NeuView';
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
@@ -13,6 +14,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Result: {result}</Text>
+      <NeuView />
     </View>
   );
 }
