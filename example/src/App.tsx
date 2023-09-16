@@ -13,7 +13,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      {/* <Text>Result: {result}</Text> */}
       <NeuView />
     </View>
   );
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: "#f2f2f2"
   },
   box: {
     width: 60,
