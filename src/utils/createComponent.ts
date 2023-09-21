@@ -1,11 +1,11 @@
-import type { PropsWithChildren } from "react";
-import * as React from "react";
+import type { PropsWithChildren } from 'react';
+import * as React from 'react';
 
-import { createElement } from "./createElement";
+import { createElement } from './createElement';
 
 export function createComponent<Props extends {}>(
   componentType: React.ComponentType<Props>,
-  options?: { shouldMemo?: boolean },
+  options?: { shouldMemo?: boolean }
 ):
   | React.ForwardRefExoticComponent<Props & React.RefAttributes<unknown>>
   | typeof componentType {
@@ -16,7 +16,7 @@ export function createComponent<Props extends {}>(
     });
   };
   let ForwardedComponent = React.forwardRef<unknown, PropsWithChildren<Props>>(
-    _component,
+    _component
   );
   if (options?.shouldMemo) {
     // @ts-ignore
