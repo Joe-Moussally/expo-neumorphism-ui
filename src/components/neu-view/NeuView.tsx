@@ -78,12 +78,6 @@ export interface NeuViewProps extends ViewProps {
    */
   borderRadius: number;
   /**
-   * Padding of the view in px
-   *
-   * @default 0
-   */
-  padding: number;
-  /**
    * Props that will be passed to the touchable component within the View
    *
    * @default {}
@@ -94,6 +88,16 @@ export interface NeuViewProps extends ViewProps {
    * @default {}
    */
   style: ViewStyle;
+  /**
+   * The View style of the component holding the content of the box.
+   * @default {}
+   */
+  innerContainerStyle: ViewStyle;
+  /**
+   * The View style of the component's outer box.
+   * @default {}
+   */
+  outerContainerStyle: ViewStyle;
 }
 
 // ** Helpers
@@ -132,7 +136,7 @@ const calculateLightShadowOffset = (
   }
 };
 
-const NeuView: React.FC<Partial<NeuViewProps>> = forwardRef<
+export const NeuView: React.FC<Partial<NeuViewProps>> = forwardRef<
   View | null,
   Partial<NeuViewProps>
 >(
@@ -144,12 +148,13 @@ const NeuView: React.FC<Partial<NeuViewProps>> = forwardRef<
       borderRadius = 30,
       lightSource = 'topLeft',
       style = {},
+      innerContainerStyle = {},
+      outerContainerStyle = {},
       onPress = () => {},
       pressable = false,
       shadowDistance = 10,
       shadowBlur = 10,
       touchableProps = {},
-      padding = 0,
       type = 'flat',
       ...props
     },
@@ -161,8 +166,8 @@ const NeuView: React.FC<Partial<NeuViewProps>> = forwardRef<
     // ** Styles
     const neuViewStyles = StyleSheet.create({
       container: {
-        width: style.width ?? width,
-        height: style.height ?? height,
+        width: (style.width || innerContainerStyle.width) ?? width,
+        height: (style.height || innerContainerStyle.height) ?? height,
         backgroundColor,
         borderRadius,
       },
@@ -243,15 +248,18 @@ const NeuView: React.FC<Partial<NeuViewProps>> = forwardRef<
       >
         <View
           ref={ref}
-          style={[neuViewStyles.container, neuViewStyles.darkShadowConatiner]}
+          style={[
+            neuViewStyles.container,
+            neuViewStyles.darkShadowConatiner,
+            outerContainerStyle,
+          ]}
           {...props}
         >
           <View
             style={[
               neuViewStyles.container,
               neuViewStyles.lightShadowContainer,
-              style,
-              { padding },
+              innerContainerStyle,
             ]}
           >
             {/* Inner Shadows */}
@@ -357,5 +365,3 @@ const NeuView: React.FC<Partial<NeuViewProps>> = forwardRef<
     );
   }
 );
-
-export default NeuView;

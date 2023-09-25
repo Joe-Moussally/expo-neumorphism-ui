@@ -7,7 +7,7 @@ import { type PressableProps, StyleSheet } from 'react-native';
 
 // ** Custom Components Imports
 import { NeuText } from '../neu-text';
-import NeuView from '../neu-view/NeuView';
+import { NeuView } from '../neu-view';
 import { ActivityIndicator } from 'react-native';
 
 export type NeuButtonSizes = 'sm' | 'md' | 'lg' | 'xl';
@@ -118,7 +118,7 @@ export const NeuButton: React.FC<Partial<NeuButtonProps>> = ({
 
   return (
     <NeuView
-      style={{ ...neuButtonStyles.button }}
+      innerContainerStyle={{ ...neuButtonStyles.button }}
       pressable
       touchableProps={props}
     >
